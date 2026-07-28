@@ -11,6 +11,26 @@ void ZE40BTVOC::begin() {
   memset(_frame, 0, sizeof(_frame));
 }
 
+void ZE40BTVOC::setMode(Mode mode) {
+  uint8_t command[FRAME_LENGTH] = {START_BYTE, 0x01, 0x78, static_cast<uint8_t>(mode), 0x00, 0x00, 0x00, 0x00, 0x00};
+  command[FRAME_LENGTH - 1] = checksum(command);
+  _serial.write(command, sizeof(command));
+}
+
+bool ZE40BTVOC::requestRead(Reading &reading) {
+  const uint8_t command[FRAME_LENGTH] = {START_BYTE, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
+  _serial.write(command, sizeof(command));
+
+  const uint32_t startMs = millis();
+  while (millis() - startMs < 100) {
+    if (read(reading)) {
+      return true;
+    }
+    yield();
+  }
+  return false;
+}
+
 bool ZE40BTVOC::read(Reading &reading) {
   bool found = false;
   while (_serial.available() > 0) {

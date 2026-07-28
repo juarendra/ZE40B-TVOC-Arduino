@@ -17,7 +17,18 @@ public:
     uint16_t fullScale;
   };
 
+  enum class Mode : uint8_t {
+    Initiative = 0x40,
+    QuestionAnswer = 0x41
+  };
+
   explicit ZE40BTVOC(Stream &serial);
+
+  /** Set the sensor operating mode (Initiative or Q&A). */
+  void setMode(Mode mode);
+
+  /** Request and read a frame synchronously (use only in Q&A mode). */
+  bool requestRead(Reading &reading);
 
   /** Clear incomplete data. Configure the supplied serial port for 9600 8N1 first. */
   void begin();
