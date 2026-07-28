@@ -51,6 +51,45 @@ void loop() {
 **🎯 Performance**: Eliminates UART buffer overflow • Frees up vital CPU cycles by keeping the sensor quiet.
 **🔧 Developer Experience**: Clean enum-based mode selection • Built-in timeout management.
 
+## 💡 Advanced Usage Example
+
+```cpp
+// Advanced Usage: Ultra-Low Power Q&A Polling Architecture
+#include <ZE40BTVOC.h>
+
+ZE40BTVOC tvoc(Serial1);
+ZE40BTVOC::Reading reading;
+
+void setup() { 
+  Serial.begin(115200);
+  Serial1.begin(9600);
+  tvoc.begin();
+  
+  // Take control: Switch to Polling Mode (0x41) to stop automatic 1s transmissions.
+  // This keeps the UART buffer completely empty until we explicitly ask!
+  tvoc.setMode(ZE40BTVOC::Mode::QuestionAnswer); 
+  Serial.println("Sensor silenced. Entering low power control mode.");
+}
+
+void loop() {
+  // Manually poll the sensor using command 0x86 only when needed
+  if (tvoc.requestRead(reading)) {
+    Serial.println("--- Air Quality ---");
+    Serial.print("TVOC: ");
+    Serial.print(reading.tvocPpb);
+    Serial.println(" ppb");
+    Serial.print("Full Scale: ");
+    Serial.print(reading.fullScale);
+    Serial.println(" ppb");
+  } else {
+    Serial.println("Failed to read from sensor! Check wiring.");
+  }
+  
+  // Wait 10 seconds. In a real IoT app, you'd put the ESP32 to Deep Sleep here.
+  delay(10000); 
+}
+```
+
 ## 📚 Core API Reference
 
 - `void begin()`: Initializes local buffers.
