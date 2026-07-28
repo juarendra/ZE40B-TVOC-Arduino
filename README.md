@@ -1,41 +1,42 @@
 # ZE40B-TVOC Arduino Library
 
-Arduino driver for the Winsen ZE40B-TVOC electrochemical TVOC sensor. The
-sensor transmits an initiative-upload frame every second over UART at 9600 baud
-(8 data bits, no parity, 1 stop bit). This library validates the checksum and
-returns the most recent valid frame.
+Enterprise IoT Arduino library for the Winsen ZE40B-TVOC Gas Sensor.
 
-## Wiring
+## 🚀 Key Features & Upgrades
+- **Q&A Polling Mode**: Take control of your UART bus! Switch the sensor to `QuestionAnswer` mode and only poll data when needed using `requestRead()`, saving cycles and battery.
+- Supports standard `Initiative` (active upload) mode.
+- Calculates PPB, full scale, and exact concentration.
 
-Connect sensor TX to the microcontroller RX and sensor RX to the
-microcontroller TX. Configure the serial port at 9600 baud, 8N1. On the VIA
-board the UART is isolated with an ADuM1201; the isolation does not change the
-serial protocol.
-
-## Example
+## 📖 Usage Manual
 
 ```cpp
 #include <ZE40BTVOC.h>
 
-ZE40BTVOC sensor(Serial2);
+ZE40BTVOC tvoc(Serial1);
+ZE40BTVOC::Reading reading;
 
 void setup() {
-  Serial2.begin(ZE40BTVOC::BAUD_RATE, SERIAL_8N1, 12, 14);
-  sensor.begin();
+  Serial.begin(115200);
+  Serial1.begin(9600);
+  
+  tvoc.begin();
+  tvoc.setMode(ZE40BTVOC::Mode::QuestionAnswer); // Silence the sensor!
 }
 
 void loop() {
-  ZE40BTVOC::Reading reading;
-  if (sensor.read(reading)) {
-    // reading.tvocPpb contains the concentration in ppb.
+  // Only read when YOU want to
+  if (tvoc.requestRead(reading)) {
+    Serial.print("TVOC (ppb): ");
+    Serial.println(reading.tvocPpb);
   }
+  delay(10000); // Sleep for 10 seconds
 }
 ```
 
-`read()` consumes all currently available bytes and returns the newest valid
-frame. It is safe to call frequently; partial frames are retained until their
-remaining bytes arrive.
+## 🛠 Installation
+1. Download this repository as a `.zip` file.
+2. In the Arduino IDE, go to **Sketch > Include Library > Add .ZIP Library...**
+3. Select the downloaded `.zip` file.
 
-## License
-
-MIT. See [LICENSE](LICENSE).
+## 📄 License
+MIT License.
