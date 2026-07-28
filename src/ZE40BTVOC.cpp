@@ -2,8 +2,16 @@
 
 #include <string.h>
 
-ZE40BTVOC::ZE40BTVOC(Stream &serial) : _serial(serial), _index(0) {
+ZE40BTVOC::ZE40BTVOC(Stream &serial) : _serial(serial), _index(0), _baselineOffset(0.0f) {
   memset(_frame, 0, sizeof(_frame));
+}
+
+void ZE40BTVOC::setBaselineOffset(float offsetPpb) {
+  _baselineOffset = offsetPpb;
+}
+
+float ZE40BTVOC::getBaselineOffset() const {
+  return _baselineOffset;
 }
 
 void ZE40BTVOC::begin() {
@@ -88,6 +96,11 @@ bool ZE40BTVOC::consume(uint8_t value, Reading &reading) {
   }
 
   const bool valid = decodeFrame(_frame, reading);
+  if (valid) {
+    float compensated = static_cast<float>(reading.tvocPpb) - _baselineOffset;
+    reading.tvocPpb = compensated > 0.0f ? static_cast<uint16_t>(compensated) : 0;
+  }
+  
   _index = (value == START_BYTE) ? 1 : 0;
   if (_index == 1) {
     _frame[0] = START_BYTE;

@@ -45,6 +45,12 @@ public:
   /** Winsen checksum: two's complement of bytes 1 through 7. */
   static uint8_t checksum(const uint8_t *frame);
 
+  /** Set the software baseline zero-offset (in PPB) to compensate for sensor drift. */
+  void setBaselineOffset(float offsetPpb);
+
+  /** Get the current software baseline zero-offset (in PPB). */
+  float getBaselineOffset() const;
+
 private:
   bool consume(uint8_t value, Reading &reading);
   static bool decodeFrame(const uint8_t *frame, Reading &reading);
@@ -52,4 +58,5 @@ private:
   Stream &_serial;
   uint8_t _frame[FRAME_LENGTH];
   uint8_t _index;
+  float _baselineOffset;
 };
