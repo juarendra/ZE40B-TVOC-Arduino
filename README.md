@@ -4,7 +4,7 @@
 
 Read **TVOC ppb** cleanly • **Silence UART Spam with Q&A Mode** • **Low-Power IoT Ready** • [**Built for Environmental Tracking**](https://github.com/juarendra/ZE40B-TVOC-Arduino)
 
-[![Build Status](https://github.com/juarendra/ZE40B-TVOC-Arduino/actions/workflows/build.yml/badge.svg)](https://github.com/juarendra/ZE40B-TVOC-Arduino/actions/workflows/build.yml) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Community](https://img.shields.io/badge/github-juarendra-orange.svg?logo=github)](https://github.com/juarendra) [![Library Size](https://img.shields.io/badge/Size-Ultra%20Light-brightgreen.svg)]()
+[![Platform](https://img.shields.io/badge/Platform-Arduino-blue.svg)](https://www.arduino.cc/) [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)]() [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Community](https://img.shields.io/badge/github-juarendra-orange.svg?logo=github)](https://github.com/juarendra) [![Library Size](https://img.shields.io/badge/Size-Ultra%20Light-brightgreen.svg)]()
 
 ## ⚡ Get Sensing in 30 Seconds
 
